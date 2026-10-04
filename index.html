@@ -1,0 +1,86 @@
+<!doctype html>
+<html lang="vi" class="scroll-smooth">
+  <head>
+    <meta charset="UTF-8" />
+    <script>
+      // Comprehensive compatibility safeguard for Window.prototype.fetch and global fetch assignment
+      (function() {
+        try {
+          var _nativeFetch = window.fetch ? window.fetch.bind(window) : null;
+          var _currentFetch = _nativeFetch;
+
+          function getFetch() {
+            return _currentFetch;
+          }
+          function setFetch(fn) {
+            _currentFetch = fn;
+          }
+
+          // 1. Redefine on Window.prototype (crucial for Chrome/Blink IDL methods)
+          if (typeof Window !== 'undefined' && Window.prototype) {
+            try {
+              Object.defineProperty(Window.prototype, 'fetch', {
+                get: getFetch,
+                set: setFetch,
+                configurable: true,
+                enumerable: true
+              });
+            } catch (e1) {}
+          }
+
+          // 2. Redefine on window object itself
+          try {
+            Object.defineProperty(window, 'fetch', {
+              get: getFetch,
+              set: setFetch,
+              configurable: true,
+              enumerable: true
+            });
+          } catch (e2) {}
+
+          // 3. Redefine on globalThis
+          try {
+            if (typeof globalThis !== 'undefined') {
+              Object.defineProperty(globalThis, 'fetch', {
+                get: getFetch,
+                set: setFetch,
+                configurable: true,
+                enumerable: true
+              });
+            }
+          } catch (e3) {}
+
+          // 4. Suppress any lingering uncaught setter error from external platform scripts/extensions
+          window.addEventListener('error', function(event) {
+            if (event && event.message && event.message.indexOf('fetch') !== -1 && event.message.indexOf('only a getter') !== -1) {
+              event.preventDefault();
+              event.stopImmediatePropagation();
+              return true;
+            }
+          }, true);
+        } catch (err) {}
+      })();
+    </script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <title>VSALAB - Tinh Hoa Thiên Nhiên | Tinh Dầu Thiên Nhiên Nguyên Bản</title>
+    <meta name="description" content="Thương hiệu tinh dầu thiên nhiên cao cấp VSALAB - Tinh Hoa Thiên Nhiên, chắt lọc 100% nguyên chất từ các vùng nguyên liệu đặc trưng Việt Nam." />
+    <link rel="canonical" href="https://vsalab.vn/" />
+    <meta property="og:title" content="VSALAB - Tinh Hoa Thiên Nhiên | Tinh Dầu Thiên Nhiên Nguyên Bản" />
+    <meta property="og:description" content="Thương hiệu tinh dầu thiên nhiên cao cấp VSALAB - Tinh Hoa Thiên Nhiên, chắt lọc 100% nguyên chất từ các vùng nguyên liệu đặc trưng Việt Nam." />
+    <meta property="og:image" content="/images/banner/banner-hero-cam-rung-tay-giang.jpg" />
+    <meta property="og:url" content="https://vsalab.vn/" />
+    <meta property="og:type" content="website" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:image" content="/images/banner/banner-hero-cam-rung-tay-giang.jpg" />
+    <link rel="icon" type="image/svg+xml" href="/images/logo/vsalab-logo.svg" />
+    <link rel="apple-touch-icon" href="/images/logo/vsalab-logo.svg" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@600;700&family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400;1,600&family=Plus+Jakarta+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
+  </head>
+  <body class="bg-[#FAF6F0] text-[#243328] antialiased selection:bg-[#2D4B39] selection:text-white">
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>
+
